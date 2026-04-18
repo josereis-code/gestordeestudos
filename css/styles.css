@@ -61,6 +61,7 @@ body {
   position: fixed;
   left: 0; top: 0; bottom: 0;
   z-index: 100;
+  transition: transform 0.3s ease;
 }
 .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border); }
 .sidebar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
@@ -323,6 +324,61 @@ body {
 }
 
 @media (max-width: 768px) {
-  .charts-grid { grid-template-columns: 1fr; }
-  .chart-container { min-height: 300px; }
+  #sidebar {
+    transform: translateX(-100%);
+  }
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  #main-content {
+    margin-left: 0;
+    padding: 16px;
+    padding-top: 72px; /* Margem para o botão do menu topo */
+  }
+  #mobile-menu-btn {
+    display: block;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .page-header select {
+    width: 100% !important;
+  }
+  
+  .subjects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  .chart-container {
+    min-height: 300px;
+  }
+  
+  /* Melhorando o Kanban para o dedo (Touch) */
+  .kanban-board {
+    scroll-snap-type: x mandatory;
+    padding-bottom: 24px;
+    gap: 16px;
+  }
+  .kanban-column {
+    scroll-snap-align: center;
+    flex: 0 0 85vw;
+    min-height: 400px;
+  }
+  
+  /* Ajuste no sistema de notificação (Toasts) */
+  #toast-container {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+  }
+  .toast {
+    min-width: unset;
+    width: 100%;
+  }
 }
