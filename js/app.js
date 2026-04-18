@@ -260,14 +260,17 @@ const Views = {
                   <div class="kanban-card-stripe" style="background:${subjMap[t.subjectId].color}"></div>
                   ${showRevisionAlert ? `<div class="review-alert" title="Vencido há ${daysSinceUpdate} dias">🚩 REVISAR</div>` : ''}
                   <div class="kanban-card-body">
-                    <div class="kanban-card-subject">${subjMap[t.subjectId].icon} ${subjMap[t.subjectId].name}</div>
+                    <div class="kanban-card-subject truncate" title="${subjMap[t.subjectId].name}">${subjMap[t.subjectId].icon} ${subjMap[t.subjectId].name}</div>
                     <div class="kanban-card-title">${t.name}</div>
                     <div class="flex justify-between items-center mt-2">
                        <div class="flex gap-2">
                          <button class="btn btn-play" onclick="Actions.startTimer('${t.id}')" title="Iniciar Estudo">▶️</button>
                          ${showRevisionAlert ? `<button class="btn btn-success-ghost btn-sm" onclick="Actions.markReviewed('${t.id}')" title="Confirmar Revisão">✅</button>` : ''}
                        </div>
-                       <button class="btn btn-ghost btn-sm" onclick="Actions.delTopic('${t.id}')" title="Remover Tópico">🗑️</button>
+                       <div class="flex gap-2">
+                         <button class="btn btn-secondary btn-sm" style="padding: 6px 10px;" onclick="Actions.moveTopicModal('${t.id}')" title="Mover Tópico">🔄</button>
+                         <button class="btn btn-ghost btn-sm" onclick="Actions.delTopic('${t.id}')" title="Remover Tópico">🗑️</button>
+                       </div>
                     </div>
                   </div>
                 </div>`;
@@ -541,6 +544,30 @@ const Actions = {
     }
   },
 
+  moveTopicModal(topicId) {
+    const topic = DB.Topics.getById(topicId);
+    if (!topic) return;
+    
+    let options = '';
+    for (const [key, col] of Object.entries(CONFIG.KANBAN_COLUMNS)) {
+      if (key !== topic.status) {
+        options += `<button class="btn btn-secondary btn-full mb-2" onclick="Actions.moveTopic('${topic.id}', '${key}')" style="justify-content:flex-start; text-align:left;">${col.title}</button>`;
+      }
+    }
+    
+    UI.modal(`Mover: ${topic.name}`, `
+      <div class="text-sm text-muted mb-4">Escolha a nova coluna:</div>
+      ${options}
+    `);
+  },
+
+  moveTopic(topicId, newStatus) {
+    DB.Topics.update(topicId, { status: newStatus });
+    App.handleRoute();
+    UI.closeModal();
+    UI.toast('Tópico movido com sucesso!', 'success');
+  },
+
   addSubject() {
     UI.modal('Nova Matéria', `
       <div class="form-group">
@@ -740,7 +767,7 @@ const Actions = {
                     borderWidth: 0
                 }]
             },
-            options: { cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+            options: { maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
         });
     }
 
@@ -758,6 +785,7 @@ const Actions = {
                 }]
             },
             options: { 
+                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: { 
                     y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
@@ -781,6 +809,7 @@ const Actions = {
                 }]
             },
             options: { 
+                maintainAspectRatio: false,
                 indexAxis: 'y',
                 plugins: { legend: { display: false } },
                 scales: { 
