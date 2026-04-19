@@ -392,4 +392,16 @@ body {
     min-width: unset;
     width: 100%;
   }
+  
+  /* Acessibilidade: Fontes e Botões Maiores no Mobile */
+  .page-subtitle { font-size: 15px; }
+  .kanban-card-subject { font-size: 12px; }
+  .kanban-card-title { font-size: 16px; }
+  .btn-sm { font-size: 14px; padding: 8px 14px; }
+  .text-sm { font-size: 14px; }
+  .text-xs { font-size: 13px; }
+  .kanban-col-title { font-size: 16px; }
+  .agenda-item-text { font-size: 14px; }
+  .form-label { font-size: 15px; }
+  .btn { font-size: 16px; padding: 12px 24px; }
 }
